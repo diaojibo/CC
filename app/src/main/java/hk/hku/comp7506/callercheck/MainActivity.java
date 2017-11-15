@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -31,9 +33,10 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         contactsView = (ListView) findViewById(R.id.contacts_view);
+        //contactsView = (ListView) View.inflate(this,R.id.contacts_view,null);
 
 
-        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,stringList);
+        adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,stringList);
         contactsView.setAdapter(adapter);
         updateContacts();
         adapter.notifyDataSetChanged();
