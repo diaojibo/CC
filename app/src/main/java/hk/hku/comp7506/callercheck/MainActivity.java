@@ -3,6 +3,8 @@ package hk.hku.comp7506.callercheck;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -14,16 +16,18 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import hk.hku.comp7506.callercheck.adapter.ContactsAdapter;
 import hk.hku.comp7506.callercheck.service.IncomingCallCheckService;
 import hk.hku.comp7506.callercheck.helper.ContactProvider;
 import hk.hku.comp7506.callercheck.model.Contact;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListView contactsView;
-    private ArrayAdapter<String> adapter;
+    //private ListView contactsView;
+    //private ArrayAdapter<String> adapter;
     private List<String> stringList = new ArrayList<>();
     private ArrayList<Contact> contactList = new ArrayList<>();
+    private RecyclerView contactsRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +36,11 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        contactsView = (ListView) findViewById(R.id.contacts_view);
-        //contactsView = (ListView) View.inflate(this,R.id.contacts_view,null);
-
-
-        adapter = new ArrayAdapter<>(this,android.R.layout.simple_list_item_1,stringList);
-        contactsView.setAdapter(adapter);
         updateContacts();
-        adapter.notifyDataSetChanged();
+        contactsRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        contactsRecyclerView.setAdapter(new ContactsAdapter(contactList,this));
+        
 
         Intent callingServiceIntent = new Intent(this, IncomingCallCheckService.class);
         callingServiceIntent.putParcelableArrayListExtra("contacts",contactList);
