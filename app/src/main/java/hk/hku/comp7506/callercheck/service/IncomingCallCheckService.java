@@ -107,9 +107,10 @@ public class IncomingCallCheckService extends Service {
         });
         AlertDialog mDialog = builder.create();
         mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-        if (Build.VERSION.SDK_INT >= 26) {
+        if (Build.VERSION.SDK_INT == 23 ) {
+            mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_TOAST);
+        }else if(Build.VERSION.SDK_INT >=26){
             mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-            Log.e("t", "good");
         }
         mDialog.show();
     }
