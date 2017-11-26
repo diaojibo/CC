@@ -1,16 +1,28 @@
 package hk.hku.comp7506.callercheck.service;
 
+import android.app.AlertDialog;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.IntDef;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.Inflater;
 
+import hk.hku.comp7506.callercheck.R;
 import hk.hku.comp7506.callercheck.model.Contact;
 
 public class IncomingCallCheckService extends Service {
@@ -69,20 +81,73 @@ public class IncomingCallCheckService extends Service {
         }
     }
 
+    private void showAlertBox(String s, int type) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
+        View view;
+        // type = contact
+        if (type == 0) {
+            view = inflater.inflate(R.layout.popup_contact, null);
+            TextView contactMessage = view.findViewById(R.id.contactMessage);
+            contactMessage.setText(s);
+        }else{ // type = stranger
+            view = inflater.inflate(R.layout.popup_stranger,null);
+            TextView strangerMessage = view.findViewById(R.id.strangerMessage);
+            strangerMessage.setText(s);
+        }
+
+
+        //builder.setTitle("Warning").setMessage(s);
+        builder.setView(view);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        AlertDialog mDialog = builder.create();
+        mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+        if (Build.VERSION.SDK_INT >= 26) {
+            mDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+            Log.e("t", "good");
+        }
+        mDialog.show();
+    }
+
+
     private void checkIncomingCall(String incomingNumber) {
         boolean isContact = false;
         for (Contact contact : contactArrayList) {
-            if (incomingNumber.equals(contact.getNumber().replace("-",""))) {
-                Toast.makeText(IncomingCallCheckService.this, contact.getName() + "(" + incomingNumber
-                        + ") is calling you", Toast.LENGTH_LONG).show();
-                isContact = true;
-                break;
+            String number = contact.getNumber();
+            if (number.charAt(0) != '+') {
+                String regEx = "[^0-9]";
+                Pattern p = Pattern.compile(regEx);
+                Matcher m = p.matcher(number);
+                number = m.replaceAll("").trim();
+                if (incomingNumber.equals(number)) {
+                    String warningString = contact.getName() + "( " + incomingNumber + " ) is calling you";
+                    showAlertBox(warningString, 0);
+                    Toast.makeText(IncomingCallCheckService.this, contact.getName() + "(" + incomingNumber
+                            + ") is calling you", Toast.LENGTH_LONG).show();
+                    isContact = true;
+                    break;
+                }
+            } else {
+                if (incomingNumber.equals(number)) {
+                    String warningString = contact.getName() + "( " + incomingNumber + " ) is calling you";
+                    showAlertBox(warningString, 0);
+                    Toast.makeText(IncomingCallCheckService.this, contact.getName() + "(" + incomingNumber
+                            + ") is calling you", Toast.LENGTH_LONG).show();
+                    isContact = true;
+                    break;
+                }
             }
         }
 
         if (!isContact) {
+            String waringString = "Warning: a stranger( " + incomingNumber + " ) is calling you!!";
+            showAlertBox(waringString, 1);
             Toast.makeText(IncomingCallCheckService.this, "Warning : a stranger (" + incomingNumber + " ) is calling you!!", Toast.LENGTH_LONG).show();
         }
     }
-
 }
