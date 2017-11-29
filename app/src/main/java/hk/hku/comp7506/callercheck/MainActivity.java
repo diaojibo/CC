@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +30,23 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Contact> contactList = new ArrayList<>();
     private RecyclerView contactsRecyclerView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        TextView text = (TextView) findViewById(R.id.text);
 
         updateContacts();
+        if(contactList.isEmpty()){
+            text.setText("There are no contacts in the local phone book，please add some contacts");
+        }
+        else{
+            text.setVisibility(View.INVISIBLE);
+        }
+
         contactsRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         contactsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         contactsRecyclerView.setAdapter(new ContactsAdapter(contactList,this));
@@ -54,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         for (Contact contact : contactList) {
             stringList.add(contact.getName() + " : " + contact.getNumber() + "\n");
         }
+
     }
 
     @Override

@@ -3,10 +3,13 @@ package hk.hku.comp7506.callercheck.helper;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import hk.hku.comp7506.callercheck.MainActivity;
+import hk.hku.comp7506.callercheck.R;
 import hk.hku.comp7506.callercheck.application.AndroidApplication;
 import hk.hku.comp7506.callercheck.model.Contact;
 
@@ -42,7 +45,9 @@ public class ContactProvider {
 
                 }
             }
+            else{
 
+            }
 
         } catch (Exception e) {
             Log.e("getContactsError", "failure in getting Contacts");
