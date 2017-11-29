@@ -128,8 +128,6 @@ public class IncomingCallCheckService extends Service {
                 if (incomingNumber.equals(number)) {
                     String warningString = contact.getName() + "( " + incomingNumber + " ) is calling you";
                     showAlertBox(warningString, 0);
-                    Toast.makeText(IncomingCallCheckService.this, contact.getName() + "(" + incomingNumber
-                            + ") is calling you", Toast.LENGTH_LONG).show();
                     isContact = true;
                     break;
                 }
@@ -137,8 +135,6 @@ public class IncomingCallCheckService extends Service {
                 if (incomingNumber.equals(number)) {
                     String warningString = contact.getName() + "( " + incomingNumber + " ) is calling you";
                     showAlertBox(warningString, 0);
-                    Toast.makeText(IncomingCallCheckService.this, contact.getName() + "(" + incomingNumber
-                            + ") is calling you", Toast.LENGTH_LONG).show();
                     isContact = true;
                     break;
                 }
@@ -148,7 +144,6 @@ public class IncomingCallCheckService extends Service {
         if (!isContact) {
             String waringString = "Warning: a stranger( " + incomingNumber + " ) is calling you!!";
             showAlertBox(waringString, 1);
-            Toast.makeText(IncomingCallCheckService.this, "Warning : a stranger (" + incomingNumber + " ) is calling you!!", Toast.LENGTH_LONG).show();
         }
     }
 }
